@@ -24,7 +24,7 @@ namespace PrincessBrideTrivia
 
         public static string GetPercentCorrect(int numberCorrectAnswers, int numberOfQuestions)
         {
-            return (numberCorrectAnswers / numberOfQuestions * 100) + "%";
+            return (numberCorrectAnswers / (double) numberOfQuestions * 100) + "%";
         }
 
         public static bool AskQuestion(Question question)
@@ -89,8 +89,36 @@ namespace PrincessBrideTrivia
                 question.Answers[1] = answer2;
                 question.Answers[2] = answer3;
                 question.CorrectAnswerIndex = correctAnswerIndex;
+                RandomizeAnswerOrder(question);
+                questions[i] = question;
             }
             return questions;
+        }
+
+        public static void RandomizeAnswerOrder(Question question)
+        {
+            Random random = new Random();
+
+            for (int i = 0; i < question.Answers.Length; i++)
+            {
+                int randomAnswer = random.Next(0, 3);
+
+                if (randomAnswer != i)
+                {
+                    string tmp = question.Answers[i];
+                    question.Answers[i] = question.Answers[randomAnswer];
+                    question.Answers[randomAnswer] = tmp;
+
+                    if (Int32.Parse(question.CorrectAnswerIndex) == i + 1)
+                    {
+                        question.CorrectAnswerIndex = (randomAnswer + 1) + "";
+                    }
+                    else if (Int32.Parse(question.CorrectAnswerIndex) == randomAnswer + 1)
+                    {
+                        question.CorrectAnswerIndex = (i + 1) + "";
+                    }
+                }
+            }
         }
     }
 }

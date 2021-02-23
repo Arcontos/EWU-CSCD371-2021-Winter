@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 
 namespace PrincessBrideTrivia.Tests
@@ -20,6 +21,29 @@ namespace PrincessBrideTrivia.Tests
 
                 // Assert 
                 Assert.AreEqual(2, questions.Length);
+            }
+            finally
+            {
+                File.Delete(filePath);
+            }
+        }
+
+        [TestMethod]
+        public void LoadQuestions_RetrievesQuestionsFromFileRandomAnswerOrder()
+        {
+            string filePath = Path.GetRandomFileName();
+            try
+            {
+                // Arrange
+                GenerateQuestionsFile(filePath, 2);
+
+                // Act
+                Question[] questions = Program.LoadQuestions(filePath);
+                string originalAnswer = questions[0].Answers[Int32.Parse(questions[0].CorrectAnswerIndex) - 1];
+                Program.RandomizeAnswerOrder(questions[0]);
+
+                // Assert 
+                Assert.AreEqual(originalAnswer, questions[0].Answers[Int32.Parse(questions[0].CorrectAnswerIndex) - 1]);
             }
             finally
             {
