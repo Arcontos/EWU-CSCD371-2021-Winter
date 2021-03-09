@@ -37,18 +37,12 @@ namespace Logger.Tests
             {
                 // Act
                 FileLogger fileLogger = new FileLogger(filePath);
-                fileLogger.Debug("Debug Message {0}", 4);
-                fileLogger.Information("Information Message {0}", 3);
-                fileLogger.Warning("Warning Message {0}", 2);
-                fileLogger.Error("Error Message {0}", 1);
+                fileLogger.Log(LogLevel.Debug, "Debug Message 4");
                 string[] fileContents = File.ReadAllLines(filePath);
 
                 // Assert
-                Assert.AreEqual(fileContents.Length, 4);
+                Assert.AreEqual(fileContents.Length, 1);
                 Assert.IsTrue(fileContents[0].Contains("Debug Message 4"));
-                Assert.IsTrue(fileContents[1].Contains("Information Message 3"));
-                Assert.IsTrue(fileContents[2].Contains("Warning Message 2"));
-                Assert.IsTrue(fileContents[3].Contains("Error Message 1"));
             }
             finally
             {

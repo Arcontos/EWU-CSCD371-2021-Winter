@@ -5,19 +5,17 @@ namespace Logger
 {
     public class FileLogger : BaseLogger
     {
-        private readonly string FilePath;
+        private string FilePath { get; }
 
         public FileLogger(string filePath)
         {
-            FilePath = filePath;
+            FilePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
         }
 
         public override void Log(LogLevel log, string message)
         {
-            using (StreamWriter streamWriter = File.AppendText(FilePath))
-            {
-                streamWriter.WriteLine(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt") + ' ' + ClassName + ' ' + Enum.GetName(typeof(LogLevel), log) + ": " + message);
-            }
+            using StreamWriter streamWriter = File.AppendText(FilePath);
+            streamWriter.WriteLine($"{DateTime.Now:\"MM / dd / yyyy hh: mm:ss tt\"} {ClassName} {log}: {message}");
         }
     }
 }
